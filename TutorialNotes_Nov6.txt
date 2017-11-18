@@ -1,0 +1,85 @@
+Evaluation with the CES machine
+1. Convert the lambda terms to deBruijn notation
+2. Convert deBruijn lambda terms into code for CES machine
+3. Make the CES machine
+4. Run your own program machine
+12
+(lambda term are not truly lambda terms they are of the data type below)
+
+data Lam a = Var a 
+        | Abst a (Lam a) 
+        | App (Lam a) (Lam a)
+        | Const Int
+        | Add (Lam a) (Lam a)
+        | Mul (Lam a) (Lam a)
+        | Leq (Lam a) (Lam a)
+        | If (Lam a) (Lam a) (Lam a)
+        | Cons (Lam a) (Lam a)
+        | Nil
+        | Case (Lam a) (Lam a) (Lam a) deriving Show
+    
+data Deb = Dvar Int
+        | Abst Deb
+        | App Deb Deb
+        | Const
+        | Add Deb Deb  
+        | Mul Deb Deb
+        | Leq Deb Deb
+        | If Deb Deb Deb
+        | Cons Deb Deb
+        | Nil
+        | Case Deb Deb Deb Deb deriving Show
+        
+data Code =  Clo [Code]
+        | CApp
+        | CAccess Int
+        | CRet
+        | CConst Int
+        | CAdd
+        | CMul
+        | CLeq
+        | CBoolean Bool
+        | CNil
+        | CCase ([Code],[Code])
+        | Cif ([Code],[Code)
+        
+debConv:: Eq a => Lam a -> Deb
+debConv = dconv' [] where
+
+debConv':: Eq a => [a] -> Lam a -> deb
+debConv' as (Abst a l) = DAbst (debConv' (a:as) l) 
+debConv' as Var a = case (lookup a as) of
+    Nothing -> error "Unbound var"
+    Just a -> DVar a
+            
+trans:: Deb -> [Code]
+trans DAbst l = [Clo(trans l) ++ (Ret)]
+
+Lambda Terms | [Code]
+{\x.t}v      | Clo ({t}x:v ++ Ret)
+
+
+
+data Stack = SInt Int
+        | SBoolean Bool
+        | SNil 
+        | SClos ([Code],[Stack])
+        
+type Machine = ([Code],[Stack],[Stack])
+
+step:: Machine -> Machine
+step (Clo(c'):c,e,s) = (c,e, (SClos(c',e)):s)
+
+
+--computation function, (c,e,s) = (code, environment, stack)
+comp:: Machine -> [Stack]
+comp (c,e,s) = case (c == [] && e == [] ) of
+    True -> s
+    False -> comp (step (c,e,s))
+    
+transition table
+
+
+            before                                  after
+code        |   environment     | stack      code        | environment      | stack 
+Clo(c'):c           e               s        c              e                   (SCLos(c'e):S)
