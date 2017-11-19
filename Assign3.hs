@@ -17,7 +17,7 @@ data Lam a = LVar a
 data Deb a = DVar Int
         | DAbst (Deb a)
         | DApp (Deb a) (Deb a)
-        | DConst
+        | DConst  --should be DConst?
         | DAdd (Deb a) (Deb a)  
         | DMul (Deb a) (Deb a)
         | Deq (Deb a) (Deb a)
