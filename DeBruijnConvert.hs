@@ -1,17 +1,24 @@
 module DeBruijnConvert where
 
 import Assign3
+import Data.List
+import Data.Maybe
 
-debConv:: Eq a => Lam a -> Deb
-debConv l = dconv' [] l where
+debConv:: Eq a => Lam a -> Deb a
+debConv l = debConv' [] l 
 
 debConv':: Eq a => [a] -> Lam a -> Deb a
 debConv' as (LAbst a l) = DAbst (debConv' (a:as) l) 
-debConv' as LVar a = case (lookup a as) of
-    Nothing -> error "Unbound var"
-    Just a -> DVar a
-    
-            
+debConv' as (LVar a) = case (myLookup a as) of
+    -1 -> error "Unbound var"
+    num -> DVar num
+  
+myLookup:: Eq a => a -> [a] -> Int
+myLookup a la = case (a `elem` la) of 
+    True -> fromJust (elemIndex a la)
+    False -> -1
+
+
 --trans:: Deb -> [Code]
 --trans DAbst l = [Clo(trans l) ++ (Ret)]
 

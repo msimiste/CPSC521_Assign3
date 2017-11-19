@@ -14,7 +14,7 @@ data Lam a = LVar a
         | LNil
         | LCase (Lam a) (Lam a) (Lam a) deriving Show
     
-data Deb a = Dvar Int
+data Deb a = DVar Int
         | DAbst (Deb a)
         | DApp (Deb a) (Deb a)
         | DConst
@@ -38,7 +38,7 @@ data Code =  Clo [Code]
         | CBoolean Bool
         | CNil
         | CCase ([Code],[Code])
-        | Cif ([Code],[Code)
+        | Cif ([Code],[Code])
         
 data Stack = SInt Int
         | SBoolean Bool
