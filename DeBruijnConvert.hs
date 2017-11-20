@@ -4,11 +4,11 @@ import Assign3
 import Data.List
 import Data.Maybe
 
-debConv:: Eq a => Lam a -> Deb a
+debConv:: Eq a => Lam a -> Deb
 debConv l = debConv' [] l 
 
-debConv':: Eq a => [a] -> Lam a -> Deb a
-debConv' as (LAbst a l) = DAbst a (debConv' (a:as) l) 
+debConv':: Eq a => [a] -> Lam a -> Deb 
+debConv' as (LAbst a l) = DAbst  (debConv' (a:as) l) 
 debConv' as (LVar a) = case (myLookup a as) of
     -1 -> error "Unbound var"
     num -> DVar num
@@ -22,6 +22,8 @@ debConv' as (LIf l1 l2 l3) = DIf (debConv' as l1) (debConv' as l2) (debConv' as 
 debConv' as (LCons l1 l2) = DCons (debConv' as l1) (debConv' as l2)
 debConv' as (LNil) = DNil
 debConv' as (LCase l1 l2 l3) = DCase (debConv' as l1) (debConv' as l2) (debConv' as l3)
+--debConv' as bla = case (bla) of
+--    _ -> error "Malformed lambda"
   
 myLookup:: Eq a => a -> [a] -> Int
 myLookup a la = case (a `elem` la) of 

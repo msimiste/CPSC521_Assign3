@@ -14,18 +14,18 @@ data Lam a = LVar a
         | LNil
         | LCase (Lam a) (Lam a) (Lam a) deriving Show
     
-data Deb a = DVar Int
-        | DAbst (Deb a)
-        | DApp (Deb a) (Deb a)
+data Deb  = DVar Int
+        | DAbst (Deb)
+        | DApp (Deb) (Deb)
         | DConst Int --should be DConst?
-        | DAdd (Deb a) (Deb a)  
-        | DMul (Deb a) (Deb a)
-        | Deq (Deb a) (Deb a)
-        | DIf (Deb a) (Deb a) (Deb a)
+        | DAdd (Deb) (Deb)  
+        | DMul (Deb) (Deb)
+        | Deq (Deb) (Deb)
+        | DIf (Deb) (Deb) (Deb)
         | DBoolean Bool
-        | DCons (Deb a) (Deb a)
+        | DCons (Deb) (Deb)
         | DNil
-        | DCase (Deb a) (Deb a) (Deb a) deriving Show
+        | DCase (Deb) (Deb) (Deb) deriving Show
         
 data Code =  Clo [Code]
         | CApp
@@ -37,16 +37,21 @@ data Code =  Clo [Code]
         | CLeq
         | CBoolean Bool
         | CNil
+        | CCons
         | CCase ([Code],[Code])
-        | Cif ([Code],[Code])
+        | CIf ([Code],[Code]) deriving (Eq, Show)
         
 data Stack = SInt Int
         | SBoolean Bool
         | SNil 
-        | SClos ([Code],[Stack])
+        | SCons (Stack, Stack)
+        | SClos ([Code],[Stack]) deriving (Eq,Show)
 
-
+--(\x.xx)(\x.x)
 ex1 = LApp (LAbst "x" (LApp (LVar "x")(LVar "x"))) (LAbst "x"(LVar"x"))
+--(\xy.xy)(\x.x)(\y.y)
 ex2 = LApp (LApp (LAbst "x" (LAbst "y" (LApp (LVar"x")(LVar "y")))) (LAbst "x" (LVar "x"))) (LAbst "y" (LVar "y"))
 --(\x.x +1)2
 ex3 = LApp (LAbst "x" (LAdd (LVar "x" ) (LConst 1))) (LConst 2)
+
+omega = LApp (LAbst "x" (LApp (LVar "x")(LVar "x")))(LAbst "x" (LApp(LVar "x")(LVar "x")))
