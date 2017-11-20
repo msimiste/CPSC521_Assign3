@@ -17,7 +17,7 @@ data Lam a = LVar a
 data Deb a = DVar Int
         | DAbst (Deb a)
         | DApp (Deb a) (Deb a)
-        | DConst  --should be DConst?
+        | DConst Int --should be DConst?
         | DAdd (Deb a) (Deb a)  
         | DMul (Deb a) (Deb a)
         | Deq (Deb a) (Deb a)
@@ -44,3 +44,9 @@ data Stack = SInt Int
         | SBoolean Bool
         | SNil 
         | SClos ([Code],[Stack])
+
+
+ex1 = LApp (LAbst "x" (LApp (LVar "x")(LVar "x"))) (LAbst "x"(LVar"x"))
+ex2 = LApp (LApp (LAbst "x" (LAbst "y" (LApp (LVar"x")(LVar "y")))) (LAbst "x" (LVar "x"))) (LAbst "y" (LVar "y"))
+--(\x.x +1)2
+ex3 = LApp (LAbst "x" (LAdd (LVar "x" ) (LConst 1))) (LConst 2)

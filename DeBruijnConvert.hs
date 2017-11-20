@@ -8,12 +8,12 @@ debConv:: Eq a => Lam a -> Deb a
 debConv l = debConv' [] l 
 
 debConv':: Eq a => [a] -> Lam a -> Deb a
-debConv' as (LAbst a l) = DAbst (debConv' (a:as) l) 
+debConv' as (LAbst a l) = DAbst a (debConv' (a:as) l) 
 debConv' as (LVar a) = case (myLookup a as) of
     -1 -> error "Unbound var"
     num -> DVar num
 debConv' as  (LApp l1 l2) = DApp (debConv' as l1) (debConv' as l2)
-debConv' as (LConst _)  = DConst
+debConv' as (LConst a)  = DConst a
 debConv' as (LAdd l1 l2) = DAdd (debConv' as l1) (debConv' as l2)
 debConv' as (LMul l1 l2) = DMul (debConv' as l1) (debConv' as l2)
 debConv' as (Leq  l1 l2) = Deq (debConv' as l1) (debConv' as l2)
@@ -25,7 +25,7 @@ debConv' as (LCase l1 l2 l3) = DCase (debConv' as l1) (debConv' as l2) (debConv'
   
 myLookup:: Eq a => a -> [a] -> Int
 myLookup a la = case (a `elem` la) of 
-    True -> fromJust (elemIndex a la)
+    True -> (fromJust (elemIndex a la))+1
     False -> -1
 
 
