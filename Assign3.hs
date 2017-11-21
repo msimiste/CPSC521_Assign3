@@ -54,4 +54,10 @@ ex2 = LApp (LApp (LAbst "x" (LAbst "y" (LApp (LVar"x")(LVar "y")))) (LAbst "x" (
 --(\x.x +1)2
 ex3 = LApp (LAbst "x" (LAdd (LVar "x" ) (LConst 1))) (LConst 2)
 
+ex4 = LApp (LAbst "x" ((LIf (LBoolean True)(LMul(LVar "x")(LVar "x"))(LAdd(LVar "x")(LVar "x")))))(LConst 3)
+
+ex5 = LApp (LAbst "x" ((LIf (LBoolean False)(LMul(LVar "x")(LVar "x"))(LAdd(LVar "x")(LVar "x")))))(LConst 3)
+
+ex6 = LApp(LAbst "x" (LCase (LVar "x") (LMul(LVar "x")(LVar "x"))(LAdd(LVar "x")(LVar "x"))))(LCons(LConst 4)(LNil))
+
 omega = LApp (LAbst "x" (LApp (LVar "x")(LVar "x")))(LAbst "x" (LApp(LVar "x")(LVar "x")))

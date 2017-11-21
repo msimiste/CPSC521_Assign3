@@ -1,19 +1,20 @@
 module Machine where
 
 import CodeConvert
+import DeBruijnConvert
 import Assign3
 import Data.List
 import Data.Maybe
 import Data.Eq
 
-ntype Machine = Machine ([Code],[Stack],[Stack]) deriving (Eq)
+type Machine = ([Code],[Stack],[Stack]) 
 
 
 
 
 --computation function, (c,e,s) = (code, environment, stack)
-comp::Eq a => Machine -> [Stack]
-comp Machine (c,e,s) = case (c == [] && e == [] ) of
+comp:: Machine -> [Stack]
+comp (c, e, s) = case ((c == []) && (e == [] )) of
     True -> s
     False -> comp (step (c,e,s))
 
@@ -21,7 +22,7 @@ comp Machine (c,e,s) = case (c == [] && e == [] ) of
 step:: Machine -> Machine
 step (Clo(c'):c,e,s) = (c,e, (SClos(c',e)):s)
 step (CApp:c ,e, (SClos(c',e'):v:s)) = (c', v:e', SClos(c,e):s)
-step ((CAccess n):c,e,s) = (c,e,(e !! n):s) 
+step ((CAccess n):c,e,s) = (c,e,(e !! (n-1)):s) 
 step (CRet:c, e, v:(SClos(c',e'):s)) = (c',e',v:s)
 step ((CConst k):c, e, s) = (c, e, (SInt k):s)
 step (CAdd:c, e, (SInt n):(SInt m):s) = (c, e, (SInt(n + m)):s)
@@ -35,5 +36,4 @@ step (CNil:c, e, s) = (c,e, SNil:s)
 step ((CCons):c, e, v1:v2:s) = (c,e, (SCons(v1,v2)):s)
 step ((CCase(c1,c2):c, e, (SCons(v1,v2)):s)) = (c1, v1:v2:e, (SClos(c,e)):s)
 step ((CCase(c1,c2)):c, e, (SNil:s)) = (c2, e, (SClos(c,e)):s)
-step ((CCase(c1,c2):c, e, (SCons(v1,v2)):s)) = (c1, v1:v2:e, (SClos(c,e)):s)
-step ((CCase(c1,c2)):c, e, (SNil:s)) = (c2, e, (SClos(c,e)):s)
+
