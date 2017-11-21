@@ -1,6 +1,5 @@
 module Assign3 where
 
-
 data Lam a = LVar a 
         | LAbst a (Lam a) 
         | LApp (Lam a) (Lam a)
@@ -47,6 +46,13 @@ data Stack = SInt Int
         | SCons (Stack, Stack)
         | SClos ([Code],[Stack]) deriving (Eq,Show)
 
+--fixPoint = (\f.(\a.f(\x.aax))(\a.f(\x.aax)))
+fixPoint = (LAbst "f" (LApp (LAbst "a" (LApp (LVar "f")(LAbst "x" (LApp (LVar "a")(LApp (LVar "a")(LVar "x")))))) (LAbst "a" (LApp (LVar "f")(LAbst "x" (LApp (LVar "a")(LApp (LVar "a")(LVar "x"))))))))
+
+correctVersion = (LAbst "t" (LAbst "n" ((LIf(Leq(LVar "n")(LConst 0))(LConst 1)(LMul(LVar "n")(LApp (LAbst "t" (LVar "t")) (LAdd(LVar "n")(LConst (-1)))))))))
+
+
+
 --(\x.xx)(\x.x)
 ex1 = LApp (LAbst "x" (LApp (LVar "x")(LVar "x"))) (LAbst "x"(LVar"x"))
 --(\xy.xy)(\x.x)(\y.y)
@@ -62,29 +68,23 @@ ex6 = LApp(LAbst "x" (LCase (LVar "x") (LMul(LVar "x")(LVar "x"))(LAdd(LVar "x")
 
 ex8 = LApp (LApp (LAbst 'x' (LAbst 'y' (Leq (LVar 'x') (LVar 'y')))) (LConst 3)) (LConst 2)
 
---fixPoint = 
--- (\a.f(\x.aax))
-fixPoint = (LAbst "f" (LApp (LAbst "a" (LApp (LVar "f")(LAbst "x" (LApp (LVar "a")(LApp (LVar "a")(LVar "x")))))) (LAbst "a" (LApp (LVar "f")(LAbst "x" (LApp (LVar "a")(LApp (LVar "a")(LVar "x"))))))))
 omega = LApp (LAbst "x" (LApp (LVar "x")(LVar "x")))(LAbst "x" (LApp(LVar "x")(LVar "x")))
 
+--fixPoint2 = (LAbst "f" ((LAbst "a" ((LApp (LVar "f") (LAbst "x"(LApp(LVar "a")(LApp (LVar "a")(LVar "x")))))) (LAbst "a" (LApp (LVar "f") (LAbst "x"(LApp(LVar "a")(LApp (LVar "a")(LVar "x")))))))))
+fixPoint3 = (LApp (LAbst "f" (LAbst "a" (LApp (LVar "f")(LAbst "x" (LApp (LVar "a")(LApp (LVar "a")(LVar "x"))))))) (LAbst "a" (LApp (LVar "f")(LAbst "x" (LApp (LVar "a")(LApp (LVar "a")(LVar "x"))))))) 
 
+--fixPoint2 = (LAbst "f" ((LAbst "a" (LApp(LVar "f")(LAbst "x"(LApp(LVar "a")(LApp(LVar "a")(LVar "x")))))) (LAbst "a" (LApp(LVar "f")(LAbst "x"(LApp(LVar "a")(LApp(LVar "a")(LVar "x"))))))))
 --fac = y (\f n -> if (n==0) then 1 else n * f (n-1))
-
-
-mVersion = (LAbst "f" (LAbst "n" ((LIf(Leq(LVar "n")(LConst 0))(LConst 1)(LMul(LVar "n")(LApp(LVar "f")(LAdd(LVar "n")(LConst (-1)))))))))
-mVersion2 = (LAbst "f" (LAbst "n" ((LIf(Leq(LVar "n")(LConst 0))(LConst 1)(LMul(LVar "n")(LAbst "f" (LAdd(LVar "n")(LConst (-1)))))))))
-
- 
+mVersion = (LAbst "f" (LAbst "n" ((LIf(Leq(LVar "n")(LConst 0))(LConst 1)(LMul(LVar "n")(LAbst "f" (LAdd(LVar "n")(LConst (-1)))))))))
 
 
 
+dreyVersion = (LAbst "t" (LAbst "n" ((LIf(Leq(LVar "n")(LConst 0))(LConst 1)(LMul(LVar "n")(LApp (LAbst "f1" (LApp (LVar "t")(LVar "f1"))) (LAdd(LVar "n")(LConst (-1)))))))))
+testVersion = (LApp (LAbst "f" (LAbst "f" (LAbst "n" ((LIf(Leq(LVar "n")(LConst 0))(LConst 1)(LMul(LVar "n")(LApp (LVar "f") (LAdd(LVar "n")(LConst (-1))))))))))(LVar "f"))
 
+mVersion3 = (LAbst "f" (LAbst "n"(LIf(LApp(Leq(LVar "n")(LConst 0))(LConst 1))(LConst 1) (LMul(LVar "n")(LApp (LVar "f")(LAdd(LVar "n")(LConst (-1))))))))
 
-
-
-
-
-
+mVersion4 = (LAbst "f" (LAbst "n" ((LIf(Leq(LVar "n")(LConst 0))(LConst 1)(LMul(LVar "n")(LApp (LApp (LAbst "f" (LVar "f")) (LAdd(LVar "n")(LConst (-1))))(LVar "n")))))))
 
 
 

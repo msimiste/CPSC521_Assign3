@@ -39,6 +39,8 @@ step (CNil:c, e, s) = (c,e, SNil:s)
 step ((CCons):c, e, v1:v2:s) = (c,e, (SCons(v1,v2)):s)
 step ((CCase(c1,c2):c, e, (SCons(v1,v2)):s)) = (c1, v1:v2:e, (SClos(c,e)):s)
 step ((CCase(c1,c2)):c, e, (SNil:s)) = (c2, e, (SClos(c,e)):s)
+step test = case (test) of
+    _ -> error (show (prettyMachine test))
 
 
 --for Pretty Printing
