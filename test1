@@ -1,0 +1,1 @@
+(LApp (LAbst "x" (LApp (LVar "x")(LVar "x"))) (LAbst "x"(LVar"x")))
