@@ -10,6 +10,9 @@ import Data.Eq
 type Machine = ([Code],[Stack],[Stack]) 
 
 
+prettyMachine:: Machine -> [String]
+prettyMachine mach = processStack stk [] where
+    stk = comp mach
 
 
 --computation function, (c,e,s) = (code, environment, stack)
@@ -37,3 +40,12 @@ step ((CCons):c, e, v1:v2:s) = (c,e, (SCons(v1,v2)):s)
 step ((CCase(c1,c2):c, e, (SCons(v1,v2)):s)) = (c1, v1:v2:e, (SClos(c,e)):s)
 step ((CCase(c1,c2)):c, e, (SNil:s)) = (c2, e, (SClos(c,e)):s)
 
+
+--for Pretty Printing
+processStack:: [Stack] -> [String] -> [String]
+processStack [] strs = strs
+processStack (s:stack) strs = case (s) of   
+    SCons (a, SNil) -> (processStack [a] strs) ++ (processStack stack strs)
+    SCons (a,b) -> (processStack [a] strs) ++ (processStack [b] strs) ++ (processStack stack strs)
+    x -> [(show x)] ++ (processStack stack strs)
+    
