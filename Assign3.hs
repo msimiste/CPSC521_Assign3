@@ -49,7 +49,9 @@ data Stack = SInt Int
 --fixPoint = (\f.(\a.f(\x.aax))(\a.f(\x.aax)))
 fixPoint = (LAbst "f" (LApp (LAbst "a" (LApp (LVar "f")(LAbst "x" (LApp (LVar "a")(LApp (LVar "a")(LVar "x")))))) (LAbst "a" (LApp (LVar "f")(LAbst "x" (LApp (LVar "a")(LApp (LVar "a")(LVar "x"))))))))
 
-correctVersion = (LAbst "t" (LAbst "n" ((LIf(Leq(LVar "n")(LConst 0))(LConst 1)(LMul(LVar "n")(LApp (LAbst "t" (LVar "t")) (LAdd(LVar "n")(LConst (-1)))))))))
+fp = (LAbst "f" (LApp(LAbst "a" (LApp (LVar "f")(LAbst "x" (LApp(LApp (LVar "a")(LVar "a"))(LVar "x")))))(LAbst "a" (LApp (LVar "f")(LAbst "x" (LApp(LApp (LVar "a")(LVar "a"))(LVar "x")))))))
+
+correctVersion = (LAbst "f" (LAbst "n" ((LIf(Leq(LVar "n")(LConst 0))(LConst 1)(LMul(LVar "n")(LApp(LVar "f")(LAdd(LVar "n")(LConst (-1)))))))))
 
 
 
